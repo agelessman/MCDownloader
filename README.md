@@ -1,5 +1,5 @@
 # MCDownloader
-A simple and powerful iOS downloader.
+A simple and powerful iOS downloader.  [中文简介](http://www.jianshu.com/p/062327c5846a)
 
 ![](MCDownload.gif)
 
