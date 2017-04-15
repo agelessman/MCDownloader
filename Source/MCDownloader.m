@@ -123,6 +123,7 @@ static NSString * LocalReceiptsPath() {
 
 #pragma mark -  NSNotification
 - (void)applicationWillTerminate:(NSNotification *)not {
+    [self setAllStateToNone];
     [self saveAllDownloadReceipts];
 }
 
@@ -142,6 +143,7 @@ static NSString * LocalReceiptsPath() {
             __strong __typeof (wself) sself = wself;
             
             if (sself) {
+                [sself setAllStateToNone];
                 [sself saveAllDownloadReceipts];
                 
                 [app endBackgroundTask:sself.backgroundTaskId];
@@ -164,8 +166,7 @@ static NSString * LocalReceiptsPath() {
     }
 }
 
-- (void)saveAllDownloadReceipts {
-    
+- (void)setAllStateToNone {
     [self.allDownloadReceipts enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:[MCDownloadReceipt class]]) {
             MCDownloadReceipt *receipt = obj;
@@ -174,7 +175,10 @@ static NSString * LocalReceiptsPath() {
             }
         }
     }];
-     [NSKeyedArchiver archiveRootObject:self.allDownloadReceipts toFile:LocalReceiptsPath()];
+}
+
+- (void)saveAllDownloadReceipts {
+    [NSKeyedArchiver archiveRootObject:self.allDownloadReceipts toFile:LocalReceiptsPath()];
 }
 
 - (void)dealloc {
@@ -394,6 +398,7 @@ static NSString * LocalReceiptsPath() {
 
 - (void)cancelAllDownloads {
     [self.downloadQueue cancelAllOperations];
+    [self setAllStateToNone];
     [self saveAllDownloadReceipts];
 }
 
