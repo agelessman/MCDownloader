@@ -131,7 +131,6 @@ static NSString * getMD5String(NSString *str) {
     if (self = [self init]) {
         
         self.url = url;
-        self.totalBytesExpectedToWrite = 1;
     }
     return self;
 }
