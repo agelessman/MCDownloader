@@ -22,7 +22,7 @@
     self.button.layer.borderWidth = 1;
     self.button.layer.borderColor = [UIColor orangeColor].CGColor;
     [self.button setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
-    self.button.clickDurationTime = 0.5;
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

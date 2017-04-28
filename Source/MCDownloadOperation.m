@@ -129,7 +129,7 @@ typedef NSMutableDictionary<NSString *, id> MCCallbacksDictionary;
 - (BOOL)cancel:(nullable id)token {
     __block BOOL shouldCancel = NO;
     dispatch_barrier_sync(self.barrierQueue, ^{
-        [self.callbackBlocks removeObjectIdenticalTo:token];
+        [self.callbackBlocks removeAllObjects];
         if (self.callbackBlocks.count == 0) {
             shouldCancel = YES;
         }

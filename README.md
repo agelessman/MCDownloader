@@ -5,27 +5,8 @@ A simple and powerful iOS downloader.  [中文简介](http://www.jianshu.com/p/0
 
 
 ## Installation
-### Cocoapods
-[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects. You can install it with the following command:
 
-```bash
-$ gem install cocoapods
-```
-
-> CocoaPods 1.1.0+ is required to build MCDownloadManager 1.0.0+.
-
-To integrate MCDownloadManager into your Xcode project using CocoaPods, specify it in your `Podfile`:
-
-```ruby
-pod 'MCDownloader', '~> 1.0.0'
-```
-
-Then, run the following command:
-
-```bash
-$ pod install
-```
-
+Copy the source file to your project.
 
 
 ## Usage

@@ -123,6 +123,7 @@ static NSString * LocalReceiptsPath() {
 
 #pragma mark -  NSNotification
 - (void)applicationWillTerminate:(NSNotification *)not {
+    [self setAllStateToNone];
     [self saveAllDownloadReceipts];
 }
 
@@ -142,6 +143,7 @@ static NSString * LocalReceiptsPath() {
             __strong __typeof (wself) sself = wself;
             
             if (sself) {
+                [sself setAllStateToNone];
                 [sself saveAllDownloadReceipts];
                 
                 [app endBackgroundTask:sself.backgroundTaskId];
@@ -164,8 +166,19 @@ static NSString * LocalReceiptsPath() {
     }
 }
 
+- (void)setAllStateToNone {
+    [self.allDownloadReceipts enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[MCDownloadReceipt class]]) {
+            MCDownloadReceipt *receipt = obj;
+            if (receipt.state != MCDownloadStateCompleted) {
+                [receipt setState:MCDownloadStateNone];
+            }
+        }
+    }];
+}
+
 - (void)saveAllDownloadReceipts {
-     [NSKeyedArchiver archiveRootObject:self.allDownloadReceipts toFile:LocalReceiptsPath()];
+    [NSKeyedArchiver archiveRootObject:self.allDownloadReceipts toFile:LocalReceiptsPath()];
 }
 
 - (void)dealloc {
@@ -285,40 +298,7 @@ static NSString * LocalReceiptsPath() {
     return nil;
 }
 
-- (void)cancel:(nullable MCDownloadReceipt *)token completed:(nullable void (^)())completed {
-    dispatch_barrier_async(self.barrierQueue, ^{
-        MCDownloadOperation *operation = self.URLOperations[[NSURL URLWithString:token.url]];
-        BOOL canceled = [operation cancel:token.downloadOperationCancelToken];
-        if (canceled) {
-            [self.URLOperations removeObjectForKey:[NSURL URLWithString:token.url]];
-            [token setState:MCDownloadStateNone];
-//            [self.allDownloadReceipts removeObjectForKey:token.url];
 
-        }
-        
-        dispatch_main_async_safe(^{
-            if (completed) {
-                completed();
-            }
-        });
-        
-    });
-}
-
-- (void)remove:(MCDownloadReceipt *)token completed:(nullable void (^)())completed{
-    [token setState:MCDownloadStateNone];
-    [self cancel:token completed:^{
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        [fileManager removeItemAtPath:token.filePath error:nil];
-        
-        dispatch_main_async_safe(^{
-            if (completed) {
-                completed();
-            }
-        });
-    }];
-    
-}
 
 - (nullable MCDownloadReceipt *)addProgressCallback:(MCDownloaderProgressBlock)progressBlock
                                            completedBlock:(MCDownloaderCompletedBlock)completedBlock
@@ -377,21 +357,48 @@ static NSString * LocalReceiptsPath() {
     return token;
 }
 
+#pragma mark - Control Methods
+
+- (void)cancel:(nullable MCDownloadReceipt *)token completed:(nullable void (^)())completed {
+    dispatch_barrier_async(self.barrierQueue, ^{
+        MCDownloadOperation *operation = self.URLOperations[[NSURL URLWithString:token.url]];
+        BOOL canceled = [operation cancel:token.downloadOperationCancelToken];
+        if (canceled) {
+            [self.URLOperations removeObjectForKey:[NSURL URLWithString:token.url]];
+            [token setState:MCDownloadStateNone];
+            //            [self.allDownloadReceipts removeObjectForKey:token.url];
+       
+        }
+        dispatch_main_async_safe(^{
+            if (completed) {
+                completed();
+            }
+        });
+    });
+}
+
+- (void)remove:(MCDownloadReceipt *)token completed:(nullable void (^)())completed{
+    [token setState:MCDownloadStateNone];
+    [self cancel:token completed:^{
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        [fileManager removeItemAtPath:token.filePath error:nil];
+        
+        dispatch_main_async_safe(^{
+            if (completed) {
+                completed();
+            }
+        });
+    }];
+    
+}
+
 - (void)setSuspended:(BOOL)suspended {
     (self.downloadQueue).suspended = suspended;
 }
 
 - (void)cancelAllDownloads {
     [self.downloadQueue cancelAllOperations];
-  
-    [self.allDownloadReceipts enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[MCDownloadReceipt class]]) {
-            MCDownloadReceipt *receipt = obj;
-            if (receipt.state != MCDownloadStateCompleted) {
-                [receipt setState:MCDownloadStateNone];
-            }
-        }
-    }];
+    [self setAllStateToNone];
     [self saveAllDownloadReceipts];
 }
 
