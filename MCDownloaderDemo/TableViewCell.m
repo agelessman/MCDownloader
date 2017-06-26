@@ -40,7 +40,6 @@
     self.speedLable.text = nil;
     self.bytesLable.text = nil;
     self.progressView.progress = 0;
-    
     self.progressView.progress = receipt.progress.fractionCompleted;
     
 //    self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfFile:receipt.filePath]];
@@ -82,7 +81,7 @@
 - (IBAction)buttonAction:(UIButton *)sender {
     
     MCDownloadReceipt *receipt = [[MCDownloader sharedDownloader] downloadReceiptForURLString:self.url];
-    if (receipt.state == MCDownloadStateDownloading) {
+    if (receipt.state == MCDownloadStateDownloading || receipt.state == MCDownloadStateWillResume) {
         
         [[MCDownloader sharedDownloader] cancel:receipt completed:^{
             [self.button setTitle:@"Start" forState:UIControlStateNormal];
