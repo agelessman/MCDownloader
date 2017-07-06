@@ -30,22 +30,24 @@
 
 NSString * const MCDownloadCacheFolderName = @"MCDownloadCache";
 
+static NSString *cacheFolderPath;
+
 NSString * cacheFolder() {
-    NSFileManager *filemgr = [NSFileManager defaultManager];
-    static NSString *cacheFolder;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if (!cacheFolder) {
-            NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES).firstObject;
-            cacheFolder = [cacheDir stringByAppendingPathComponent:MCDownloadCacheFolderName];
-        }
+    if (!cacheFolderPath) {
+        NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES).firstObject;
+        cacheFolderPath = [cacheDir stringByAppendingPathComponent:MCDownloadCacheFolderName];
+        NSFileManager *filemgr = [NSFileManager defaultManager];
         NSError *error = nil;
-        if(![filemgr createDirectoryAtPath:cacheFolder withIntermediateDirectories:YES attributes:nil error:&error]) {
-            NSLog(@"Failed to create cache directory at %@", cacheFolder);
-            cacheFolder = nil;
+        if(![filemgr createDirectoryAtPath:cacheFolderPath withIntermediateDirectories:YES attributes:nil error:&error]) {
+            NSLog(@"Failed to create cache directory at %@", cacheFolderPath);
+            cacheFolderPath = nil;
         }
-    });
-    return cacheFolder;
+    }
+    return cacheFolderPath;
+}
+
+static void clearCacheFolder() {
+    cacheFolderPath = nil;
 }
 
 static NSString * LocalReceiptsPath() {
@@ -406,6 +408,7 @@ static NSString * LocalReceiptsPath() {
     [self cancelAllDownloads];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager removeItemAtPath:cacheFolder() error:nil];
+    clearCacheFolder();
 }
 
 #pragma mark Helper methods
