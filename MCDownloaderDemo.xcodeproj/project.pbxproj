@@ -240,6 +240,7 @@
 				TargetAttributes = {
 					E71DCA1F1E9B1D2B00A058D2 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = XC34BSW465;
 						ProvisioningStyle = Automatic;
 					};
 					E71DCA381E9B1D2C00A058D2 = {
@@ -460,6 +461,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = XC34BSW465;
 				INFOPLIST_FILE = MCDownloaderDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -472,6 +474,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = XC34BSW465;
 				INFOPLIST_FILE = MCDownloaderDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -545,6 +548,7 @@
 				E71DCA4F1E9B1D2C00A058D2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E71DCA501E9B1D2C00A058D2 /* Build configuration list for PBXNativeTarget "MCDownloaderDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -553,6 +557,7 @@
 				E71DCA521E9B1D2C00A058D2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E71DCA531E9B1D2C00A058D2 /* Build configuration list for PBXNativeTarget "MCDownloaderDemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -561,6 +566,7 @@
 				E71DCA551E9B1D2C00A058D2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

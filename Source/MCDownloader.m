@@ -336,19 +336,12 @@ static NSString * LocalReceiptsPath() {
         if (!self.allDownloadReceipts[url.absoluteString]) {
             token = [[MCDownloadReceipt alloc] initWithURLString:url.absoluteString
                                     downloadOperationCancelToken:downloadOperationCancelToken
-                                         downloaderProgressBlock:progressBlock
-                                        downloaderCompletedBlock:completedBlock];
+                                         downloaderProgressBlock:nil
+                                        downloaderCompletedBlock:nil];
             self.allDownloadReceipts[url.absoluteString] = token;
         }else {
             token = self.allDownloadReceipts[url.absoluteString];
-            if (!token.downloaderProgressBlock) {
-                [token setDownloaderProgressBlock:progressBlock];
-            }
-            
-            if (!token.downloaderCompletedBlock) {
-                [token setDownloaderCompletedBlock:completedBlock];
-            }
-            
+
             if (!token.downloadOperationCancelToken) {
                 [token setDownloadOperationCancelToken:downloadOperationCancelToken];
             }
