@@ -92,12 +92,12 @@ static NSString * getMD5String(NSString *str) {
     _customFilePathBlock = customFilePathBlock;
     if (_customFilePathBlock) {
         NSString *path = customFilePathBlock(self);
-        if (![path isEqualToString:_filePath] ) {
+        if (path && ![path isEqualToString:_filePath] ) {
+            _filePath = path;
             if (_filePath && ![[NSFileManager defaultManager] fileExistsAtPath:_filePath]) {
                 NSString *dir = [_filePath stringByDeletingLastPathComponent];
                 [[NSFileManager defaultManager] createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:nil];
             }
-            _filePath = path;
         }
     }
 }
