@@ -376,6 +376,7 @@ static NSString * LocalReceiptsPath() {
     [token setState:MCDownloadStateNone];
     [self cancel:token completed:^{
         NSFileManager *fileManager = [NSFileManager defaultManager];
+    
         [fileManager removeItemAtPath:token.filePath error:nil];
         
         dispatch_main_async_safe(^{

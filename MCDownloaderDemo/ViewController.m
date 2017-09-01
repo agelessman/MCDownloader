@@ -39,7 +39,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = [UIColor whiteColor];
-
+    [[MCDownloader sharedDownloader] removeAndClearAll];
 //    [MCDownloader sharedDownloader].maxConcurrentDownloads = 1;
 }
 

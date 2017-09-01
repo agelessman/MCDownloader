@@ -75,19 +75,32 @@ static NSString * getMD5String(NSString *str) {
 @implementation MCDownloadReceipt
 
 - (NSString *)filePath {
-    
-    NSString *path = [cacheFolder() stringByAppendingPathComponent:self.filename];
-    if (![path isEqualToString:_filePath] ) {
-        if (_filePath && ![[NSFileManager defaultManager] fileExistsAtPath:_filePath]) {
-            NSString *dir = [_filePath stringByDeletingLastPathComponent];
-            [[NSFileManager defaultManager] createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:nil];
+    if (_filePath == nil) {
+        NSString *path = [cacheFolder() stringByAppendingPathComponent:self.filename];
+        if (![path isEqualToString:_filePath] ) {
+            if (_filePath && ![[NSFileManager defaultManager] fileExistsAtPath:_filePath]) {
+                NSString *dir = [_filePath stringByDeletingLastPathComponent];
+                [[NSFileManager defaultManager] createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:nil];
+            }
+            _filePath = path;
         }
-        _filePath = path;
     }
-    
     return _filePath;
 }
 
+- (void)setCustomFilePathBlock:(nullable MCDownloaderReceiptCustomFilePathBlock)customFilePathBlock {
+    _customFilePathBlock = customFilePathBlock;
+    if (_customFilePathBlock) {
+        NSString *path = customFilePathBlock(self);
+        if (![path isEqualToString:_filePath] ) {
+            if (_filePath && ![[NSFileManager defaultManager] fileExistsAtPath:_filePath]) {
+                NSString *dir = [_filePath stringByDeletingLastPathComponent];
+                [[NSFileManager defaultManager] createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:nil];
+            }
+            _filePath = path;
+        }
+    }
+}
 
 - (NSString *)filename {
     if (_filename == nil) {

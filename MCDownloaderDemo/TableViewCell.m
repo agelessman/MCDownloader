@@ -76,6 +76,11 @@
         
     };
 
+    receipt.customFilePathBlock = ^NSString * _Nullable(MCDownloadReceipt * _Nullable receipt) {
+        NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES).firstObject;
+        NSString *cacheFolderPath = [cacheDir stringByAppendingPathComponent:@"我自己写的"];
+        return [cacheFolderPath stringByAppendingPathComponent:url.lastPathComponent];
+    };
 
 }
 - (IBAction)buttonAction:(UIButton *)sender {

@@ -45,8 +45,9 @@ typedef NS_ENUM(NSInteger, MCDownloadPrioritization) {
 };
 
 
-typedef void(^MCDownloaderProgressBlock)(NSInteger receivedSize, NSInteger expectedSize,  NSInteger speed, NSURL * _Nullable targetURL);
-typedef void(^MCDownloaderCompletedBlock)(MCDownloadReceipt * _Nullable receipt, NSError * _Nullable error, BOOL finished);
+typedef void (^MCDownloaderProgressBlock)(NSInteger receivedSize, NSInteger expectedSize,  NSInteger speed, NSURL * _Nullable targetURL);
+typedef void (^MCDownloaderCompletedBlock)(MCDownloadReceipt * _Nullable receipt, NSError * _Nullable error, BOOL finished);
+typedef NSString *_Nullable (^MCDownloaderReceiptCustomFilePathBlock)(MCDownloadReceipt * _Nullable receipt);
 
 /**
  *  The receipt of a downloader,we can get all the informations from the receipt.
@@ -77,6 +78,11 @@ typedef void(^MCDownloaderCompletedBlock)(MCDownloadReceipt * _Nullable receipt,
  The url's pathExtension without through the MD5 processing.
  */
 @property (nonatomic, copy, readonly, nullable) NSString *truename;
+
+/**
+ The url's pathExtension without through the MD5 processing.
+ */
+@property (nonatomic, copy, nullable) MCDownloaderReceiptCustomFilePathBlock customFilePathBlock;
 
 /**
  The current download speed,
