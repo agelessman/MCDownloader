@@ -35,6 +35,13 @@
     _url = url;
     
     MCDownloadReceipt *receipt = [[MCDownloader sharedDownloader] downloadReceiptForURLString:url];
+    
+    receipt.customFilePathBlock = ^NSString * _Nullable(MCDownloadReceipt * _Nullable receipt) {
+        NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES).firstObject;
+        NSString *cacheFolderPath = [cacheDir stringByAppendingPathComponent:@"我自己写的"];
+        return [cacheFolderPath stringByAppendingPathComponent:url.lastPathComponent];
+    };
+    
 //    NSLog(@"%@", receipt.filePath);
     self.nameLabel.text = receipt.truename;
     self.speedLable.text = nil;
@@ -75,13 +82,6 @@
         }
         
     };
-
-    receipt.customFilePathBlock = ^NSString * _Nullable(MCDownloadReceipt * _Nullable receipt) {
-        NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES).firstObject;
-        NSString *cacheFolderPath = [cacheDir stringByAppendingPathComponent:@"我自己写的"];
-        return [cacheFolderPath stringByAppendingPathComponent:url.lastPathComponent];
-    };
-
 }
 - (IBAction)buttonAction:(UIButton *)sender {
     
