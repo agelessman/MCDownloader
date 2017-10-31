@@ -166,6 +166,19 @@ static NSString * LocalReceiptsPath() {
         [app endBackgroundTask:self.backgroundTaskId];
         self.backgroundTaskId = UIBackgroundTaskInvalid;
     }
+    
+    NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES).firstObject;
+    NSString *cachePath = [cacheDir stringByAppendingPathComponent:MCDownloadCacheFolderName];
+    NSString *existedCacheFolderPath = cacheFolder();
+    if (existedCacheFolderPath && ![existedCacheFolderPath isEqualToString:cachePath]) {
+        clearCacheFolder();
+        [self.allDownloadReceipts enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[MCDownloadReceipt class]]) {
+                MCDownloadReceipt *receipt = obj;
+                [receipt setValue:nil forKey:@"filePath"];
+            }
+        }];
+    }
 }
 
 - (void)setAllStateToNone {
